@@ -28,16 +28,19 @@ var createNewTaskElement = function (taskString) {
   var deleteButton = document.createElement("button"); //delete button
   var deleteButtonImg = document.createElement("img"); //delete button image
   label.innerText = taskString;
-  label.className = "task";
+  label.className = "task edit-label";
 
   //Each elements, needs appending
+  listItem.className = "task-element";
   checkBox.type = "checkbox";
+  checkBox.className = "input-checkbox";
   editInput.type = "text";
-  editInput.className = "task";
+  editInput.className = "task input-task";
   editButton.innerText = "Edit"; //innerText encodes special characters, HTML does not.
-  editButton.className = "edit";
-  deleteButton.className = "delete";
+  editButton.className = "edit btn";
+  deleteButton.className = "delete btn";
   deleteButtonImg.src = "./remove.svg";
+  deleteButtonImg.className = "delete-img";
   deleteButton.appendChild(deleteButtonImg);
 
   //and appending.
@@ -73,15 +76,22 @@ var editTask = function () {
   var label = listItem.querySelector("label");
   var editBtn = listItem.querySelector(".edit");
   var containsClass = listItem.classList.contains("edit-mode");
+
+  editInput.classList.add("input-task");
   //If class of the parent is .edit-mode
   if (containsClass) {
     //switch to .edit-mode
     //label becomes the inputs value.
     label.innerText = editInput.value;
     editBtn.innerText = "Edit";
+    //add class to editInput and label
+    editInput.classList.remove("input-task-edit");
+    label.classList.remove("label-task");
   } else {
     editInput.value = label.innerText;
     editBtn.innerText = "Save";
+    editInput.classList.add("input-task-edit");
+    label.classList.add("label-task");
   }
 
   //toggle .edit-mode on the parent.
@@ -135,7 +145,13 @@ var bindTaskEvents = function (taskListItem, checkBoxEventHandler) {
   var checkBox = taskListItem.querySelector("input[type=checkbox]");
   var editButton = taskListItem.querySelector("button.edit");
   var deleteButton = taskListItem.querySelector("button.delete");
-
+  var labelTaskName = taskListItem.querySelector("label");
+  //change labelTaskName tag
+  if (labelTaskName.classList.contains("completed-task-name")) {
+    labelTaskName.classList.remove("completed-task-name");
+  } else {
+    labelTaskName.classList.add("completed-task-name");
+  }
   //Bind editTask to edit button.
   editButton.onclick = editTask;
   //Bind deleteTask to delete button.
